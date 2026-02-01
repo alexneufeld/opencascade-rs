@@ -53,6 +53,12 @@
 #include <Geom_BezierSurface.hxx>
 #include <Geom_CylindricalSurface.hxx>
 #include <Geom_Plane.hxx>
+#include <Geom_BSplineSurface.hxx>
+#include <Geom_ConicalSurface.hxx>
+#include <Geom_SphericalSurface.hxx>
+#include <Geom_ToroidalSurface.hxx>
+#include <Geom_SurfaceOfLinearExtrusion.hxx>
+#include <Geom_SurfaceOfRevolution.hxx>
 #include <Geom_Surface.hxx>
 #include <Geom_TrimmedCurve.hxx>
 #include <IGESControl_Reader.hxx>
@@ -105,6 +111,12 @@ typedef opencascade::handle<Geom_TrimmedCurve> HandleGeomTrimmedCurve;
 typedef opencascade::handle<Geom_Surface> HandleGeomSurface;
 typedef opencascade::handle<Geom_BezierSurface> HandleGeomBezierSurface;
 typedef opencascade::handle<Geom_Plane> HandleGeomPlane;
+typedef opencascade::handle<Geom_ConicalSurface> HandleGeom_ConicalSurface;
+typedef opencascade::handle<Geom_BSplineSurface> HandleGeom_BSplineSurface;
+typedef opencascade::handle<Geom_SphericalSurface> HandleGeom_SphericalSurface;
+typedef opencascade::handle<Geom_ToroidalSurface> HandleGeom_ToroidalSurface;
+typedef opencascade::handle<Geom_SurfaceOfLinearExtrusion> HandleGeom_SurfaceOfLinearExtrusion;
+typedef opencascade::handle<Geom_SurfaceOfRevolution> HandleGeom_SurfaceOfRevolution;
 typedef opencascade::handle<Geom2d_Curve> HandleGeom2d_Curve;
 typedef opencascade::handle<Geom2d_Ellipse> HandleGeom2d_Ellipse;
 typedef opencascade::handle<Geom2d_TrimmedCurve> HandleGeom2d_TrimmedCurve;
@@ -144,6 +156,82 @@ inline std::unique_ptr<gp_Pnt> GCPnts_TangentialDeflection_Value(const GCPnts_Ta
 inline std::unique_ptr<HandleGeomPlane> new_HandleGeomPlane_from_HandleGeomSurface(const HandleGeomSurface &surface) {
   HandleGeomPlane plane_handle = opencascade::handle<Geom_Plane>::DownCast(surface);
   return std::unique_ptr<HandleGeomPlane>(new opencascade::handle<Geom_Plane>(plane_handle));
+}
+
+inline std::unique_ptr<HandleGeom_CylindricalSurface> new_HandleGeom_CylindricalSurface_from_HandleGeomSurface(const HandleGeomSurface &surface) {
+  HandleGeom_CylindricalSurface cylinder_handle = opencascade::handle<Geom_CylindricalSurface>::DownCast(surface);
+  return std::unique_ptr<HandleGeom_CylindricalSurface>(new opencascade::handle<Geom_CylindricalSurface>(cylinder_handle));
+}
+
+inline std::unique_ptr<HandleGeom_SphericalSurface> new_HandleGeom_SphericalSurface_from_HandleGeomSurface(const HandleGeomSurface &surface) {
+  HandleGeom_SphericalSurface sphere_handle = opencascade::handle<Geom_SphericalSurface>::DownCast(surface);
+  return std::unique_ptr<HandleGeom_SphericalSurface>(new opencascade::handle<Geom_SphericalSurface>(sphere_handle));
+}
+
+inline std::unique_ptr<HandleGeom_ConicalSurface> new_HandleGeom_ConicalSurface_from_HandleGeomSurface(const HandleGeomSurface &surface) {
+  HandleGeom_ConicalSurface cone_handle = opencascade::handle<Geom_ConicalSurface>::DownCast(surface);
+  return std::unique_ptr<HandleGeom_ConicalSurface>(new opencascade::handle<Geom_ConicalSurface>(cone_handle));
+}
+
+inline std::unique_ptr<HandleGeom_ToroidalSurface> new_HandleGeom_ToroidalSurface_from_HandleGeomSurface(const HandleGeomSurface &surface) {
+  HandleGeom_ToroidalSurface torus_handle = opencascade::handle<Geom_ToroidalSurface>::DownCast(surface);
+  return std::unique_ptr<HandleGeom_ToroidalSurface>(new opencascade::handle<Geom_ToroidalSurface>(torus_handle));
+}
+
+inline std::unique_ptr<HandleGeomBezierSurface> new_HandleGeom_BezierSurface_from_HandleGeomSurface(const HandleGeomSurface &surface) {
+  HandleGeomBezierSurface surf_handle = opencascade::handle<Geom_BezierSurface>::DownCast(surface);
+  return std::unique_ptr<HandleGeomBezierSurface>(new opencascade::handle<Geom_BezierSurface>(surf_handle));
+}
+
+inline std::unique_ptr<HandleGeom_BSplineSurface> new_HandleGeom_BSplineSurface_from_HandleGeomSurface(const HandleGeomSurface &surface) {
+  HandleGeom_BSplineSurface surf_handle = opencascade::handle<Geom_BSplineSurface>::DownCast(surface);
+  return std::unique_ptr<HandleGeom_BSplineSurface>(new opencascade::handle<Geom_BSplineSurface>(surf_handle));
+}
+
+inline std::unique_ptr<HandleGeom_SurfaceOfLinearExtrusion> new_HandleGeom_SurfaceOfLinearExtrusion_from_HandleGeomSurface(const HandleGeomSurface &surface) {
+  HandleGeom_SurfaceOfLinearExtrusion surf_handle = opencascade::handle<Geom_SurfaceOfLinearExtrusion>::DownCast(surface);
+  return std::unique_ptr<HandleGeom_SurfaceOfLinearExtrusion>(new opencascade::handle<Geom_SurfaceOfLinearExtrusion>(surf_handle));
+}
+
+inline std::unique_ptr<HandleGeom_SurfaceOfRevolution> new_HandleGeom_SurfaceOfRevolution_from_HandleGeomSurface(const HandleGeomSurface &surface) {
+  HandleGeom_SurfaceOfRevolution surf_handle = opencascade::handle<Geom_SurfaceOfRevolution>::DownCast(surface);
+  return std::unique_ptr<HandleGeom_SurfaceOfRevolution>(new opencascade::handle<Geom_SurfaceOfRevolution>(surf_handle));
+}
+
+inline std::unique_ptr<HandleGeomSurface> new_HandleGeomSurface_from_HandleGeomPlane(const HandleGeomPlane &plane) {
+  return std::unique_ptr<HandleGeomSurface>(new opencascade::handle<Geom_Surface>(plane));
+}
+
+inline std::unique_ptr<HandleGeomSurface> new_HandleGeomSurface_from_HandleGeom_CylindricalSurface(const HandleGeom_CylindricalSurface &cylinder) {
+  return std::unique_ptr<HandleGeomSurface>(new opencascade::handle<Geom_Surface>(cylinder));
+}
+
+inline std::unique_ptr<HandleGeomSurface> new_HandleGeomSurface_from_HandleGeom_SphericalSurface(const HandleGeom_SphericalSurface &sphere) {
+  return std::unique_ptr<HandleGeomSurface>(new opencascade::handle<Geom_Surface>(sphere));
+}
+
+inline std::unique_ptr<HandleGeomSurface> new_HandleGeomSurface_from_HandleGeom_ConicalSurface(const HandleGeom_ConicalSurface &cone) {
+  return std::unique_ptr<HandleGeomSurface>(new opencascade::handle<Geom_Surface>(cone));
+}
+
+inline std::unique_ptr<HandleGeomSurface> new_HandleGeomSurface_from_HandleGeom_ToroidalSurface(const HandleGeom_ToroidalSurface &torus) {
+  return std::unique_ptr<HandleGeomSurface>(new opencascade::handle<Geom_Surface>(torus));
+}
+
+inline std::unique_ptr<HandleGeomSurface> new_HandleGeomSurface_from_HandleGeom_BezierSurface(const HandleGeomBezierSurface &surface) {
+  return std::unique_ptr<HandleGeomSurface>(new opencascade::handle<Geom_Surface>(surface));
+}
+
+inline std::unique_ptr<HandleGeomSurface> new_HandleGeomSurface_from_HandleGeom_BSplineSurface(const HandleGeom_BSplineSurface &surface) {
+  return std::unique_ptr<HandleGeomSurface>(new opencascade::handle<Geom_Surface>(surface));
+}
+
+inline std::unique_ptr<HandleGeomSurface> new_HandleGeomSurface_from_HandleGeom_SurfaceOfLinearExtrusion(const HandleGeom_SurfaceOfLinearExtrusion &surface) {
+  return std::unique_ptr<HandleGeomSurface>(new opencascade::handle<Geom_Surface>(surface));
+}
+
+inline std::unique_ptr<HandleGeomSurface> new_HandleGeomSurface_from_HandleGeom_SurfaceOfRevolution(const HandleGeom_SurfaceOfRevolution &surface) {
+  return std::unique_ptr<HandleGeomSurface>(new opencascade::handle<Geom_Surface>(surface));
 }
 
 // Collections

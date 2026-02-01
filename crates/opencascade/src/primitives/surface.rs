@@ -3,12 +3,76 @@ use cxx::UniquePtr;
 use glam::DVec3;
 use opencascade_sys::ffi;
 
-pub struct Surface {
-    pub(crate) inner: UniquePtr<ffi::HandleGeomSurface>,
+pub enum Surface {
+    Plane(Plane),
+    Cylinder(Cylinder),
+    Sphere(Sphere),
+    Cone(Cone),
+    Torus(Torus),
+    BezierSurface(BezierSurface),
+    BSplineSurface(BSplineSurface),
+    SurfaceOfExtrusion(SurfaceOfExtrusion),
+    SurfaceOfRevolution(SurfaceOfRevolution),
+}
+
+pub struct Plane {
+    pub(crate) inner: UniquePtr<ffi::HandleGeomPlane>,
+}
+
+pub struct Cylinder {
+    pub(crate) inner: UniquePtr<ffi::HandleGeom_CylindricalSurface>,
+}
+
+pub struct Sphere {
+    pub(crate) inner: UniquePtr<ffi::HandleGeom_SphericalSurface>,
+}
+
+pub struct Cone {
+    pub(crate) inner: UniquePtr<ffi::HandleGeom_ConicalSurface>,
+}
+
+pub struct Torus {
+    pub(crate) inner: UniquePtr<ffi::HandleGeom_ToroidalSurface>,
+}
+
+pub struct BezierSurface {
+    pub(crate) inner: UniquePtr<ffi::HandleGeomBezierSurface>,
+}
+
+pub struct BSplineSurface {
+    pub(crate) inner: UniquePtr<ffi::HandleGeom_BSplineSurface>,
+}
+
+pub struct SurfaceOfExtrusion {
+    pub(crate) inner: UniquePtr<ffi::HandleGeom_SurfaceOfLinearExtrusion>,
+}
+
+pub struct SurfaceOfRevolution {
+    pub(crate) inner: UniquePtr<ffi::HandleGeom_SurfaceOfRevolution>,
 }
 
 impl Surface {
-    pub fn bezier(poles: impl IntoIterator<Item = impl IntoIterator<Item = DVec3>>) -> Self {
+    pub fn make_plane(_base: DVec3, _normal: DVec3) -> Self {
+        todo!()
+    }
+
+    pub fn make_cylinder(_center: DVec3, _axis: DVec3, _radius: f64) -> Self {
+        todo!()
+    }
+
+    pub fn make_sphere(_center: DVec3, _radius: f64) -> Self {
+        todo!()
+    }
+
+    pub fn make_cone(_apex: DVec3, _axis: DVec3, semiangle: f64) -> Self {
+        todo!()
+    }
+
+    pub fn make_torus(_base: DVec3, _axis: DVec3, _major_radius: f64, _minor_radius: f64) -> Self {
+        todo!()
+    }
+
+    pub fn make_bezier(poles: impl IntoIterator<Item = impl IntoIterator<Item = DVec3>>) -> Self {
         let poles: Vec<Vec<_>> =
             poles.into_iter().map(|poles| poles.into_iter().collect()).collect();
 
@@ -27,8 +91,20 @@ impl Surface {
         }
 
         let bezier = ffi::Geom_BezierSurface_ctor(&pole_array);
-        let inner = ffi::bezier_to_surface(&bezier);
+        // let inner = ffi::bezier_to_surface(&bezier);
 
-        Self { inner }
+        Self::BezierSurface(BezierSurface { inner: bezier })
+    }
+
+    pub fn make_bspline() -> Self {
+        todo!()
+    }
+
+    pub fn make_revolution() -> Self {
+        todo!()
+    }
+
+    pub fn make_extrusion() -> Self {
+        todo!()
     }
 }

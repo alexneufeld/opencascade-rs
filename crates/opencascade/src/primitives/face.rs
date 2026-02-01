@@ -3,7 +3,8 @@ use crate::{
     law_function::law_function_from_graph,
     make_pipe_shell::make_pipe_shell_with_law_function,
     primitives::{
-        make_axis_1, make_point, make_vec, EdgeIterator, JoinType, Shape, Solid, Surface, Wire,
+        make_axis_1, make_point, make_vec, BSplineSurface, Cone, Cylinder, EdgeIterator, JoinType,
+        Plane, Shape, Solid, Sphere, Surface, Torus, Wire, BezierSurface, SurfaceOfExtrusion, SurfaceOfRevolution
     },
     workplane::Workplane,
 };
@@ -42,9 +43,87 @@ impl Face {
     pub fn from_surface(surface: &Surface) -> Self {
         const EDGE_TOLERANCE: f64 = 0.0001;
 
-        let make_face = ffi::BRepBuilderAPI_MakeFace_surface(&surface.inner, EDGE_TOLERANCE);
+        let surf = match surface {
+            Surface::Plane(plane) => ffi::new_HandleGeomSurface_from_HandleGeomPlane(&plane.inner),
+            Surface::Cylinder(cylinder) => {
+                ffi::new_HandleGeomSurface_from_HandleGeom_CylindricalSurface(&cylinder.inner)
+            },
+            Surface::Sphere(sphere) => {
+                ffi::new_HandleGeomSurface_from_HandleGeom_SphericalSurface(&sphere.inner)
+            },
+            Surface::Cone(cone) => {
+                ffi::new_HandleGeomSurface_from_HandleGeom_ConicalSurface(&cone.inner)
+            },
+            Surface::Torus(torus) => {
+                ffi::new_HandleGeomSurface_from_HandleGeom_ToroidalSurface(&torus.inner)
+            },
+            Surface::BezierSurface(bezier_surface) => {
+                ffi::new_HandleGeomSurface_from_HandleGeom_BezierSurface(&bezier_surface.inner)
+            },
+            Surface::BSplineSurface(bspline_surface) => {
+                ffi::new_HandleGeomSurface_from_HandleGeom_BSplineSurface(&bspline_surface.inner)
+            },
+            Surface::SurfaceOfExtrusion(surface_of_extrusion) => {
+                ffi::new_HandleGeomSurface_from_HandleGeom_SurfaceOfLinearExtrusion(
+                    &surface_of_extrusion.inner,
+                )
+            },
+            Surface::SurfaceOfRevolution(surface_of_revolution) => {
+                ffi::new_HandleGeomSurface_from_HandleGeom_SurfaceOfRevolution(
+                    &surface_of_revolution.inner,
+                )
+            },
+        };
+
+        let make_face = ffi::BRepBuilderAPI_MakeFace_surface(&surf, EDGE_TOLERANCE);
 
         Self::from_make_face(make_face)
+    }
+
+    pub fn surface(&self) -> Surface {
+        let surf = ffi::BRep_Tool_Surface(&self.inner);
+        let dynamic_type = ffi::DynamicType(&surf);
+        let name = ffi::type_name(dynamic_type);
+
+        match name.as_str() {
+            "Geom_Plane" => {
+                let plane_handle = ffi::new_HandleGeomPlane_from_HandleGeomSurface(&surf);
+                Surface::Plane(Plane { inner: plane_handle })
+            },
+            "Geom_CylindricalSurface" => {
+                let cylinder = ffi::new_HandleGeom_CylindricalSurface_from_HandleGeomSurface(&surf);
+                Surface::Cylinder(Cylinder { inner: cylinder })
+            },
+            "Geom_Toroid" => {
+                let torus = ffi::new_HandleGeom_ToroidalSurface_from_HandleGeomSurface(&surf);
+                Surface::Torus(Torus { inner: torus })
+            },
+            "Geom_BezierSurface" => {
+                let surface = ffi::new_HandleGeom_BezierSurface_from_HandleGeomSurface(&surf);
+                Surface::BezierSurface(BezierSurface { inner: surface })
+            },
+            "Geom_BSplineSurface" => {
+                let surface = ffi::new_HandleGeom_BSplineSurface_from_HandleGeomSurface(&surf);
+                Surface::BSplineSurface(BSplineSurface { inner: surface })
+            },
+            "Geom_Sphere" => {
+                let sphere = ffi::new_HandleGeom_SphericalSurface_from_HandleGeomSurface(&surf);
+                Surface::Sphere(Sphere { inner: sphere })
+            },
+            "Geom_Cone" => {
+                let cone = ffi::new_HandleGeom_ConicalSurface_from_HandleGeomSurface(&surf);
+                Surface::Cone(Cone { inner: cone })
+            },
+            "Geom_SurfaceOfLinearExtrusion" => {
+                let surface = ffi::new_HandleGeom_SurfaceOfLinearExtrusion_from_HandleGeomSurface(&surf);
+                Surface::SurfaceOfExtrusion(SurfaceOfExtrusion { inner: surface })
+            },
+            "Geom_SurfaceOfRevolution" => {
+                let surface = ffi::new_HandleGeom_SurfaceOfRevolution_from_HandleGeomSurface(&surf);
+                Surface::SurfaceOfRevolution(SurfaceOfRevolution { inner: surface })
+            },
+            _ => panic!("Unknown surface type: {}", name),
+        }
     }
 
     #[must_use]

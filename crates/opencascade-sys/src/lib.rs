@@ -81,12 +81,18 @@ pub mod ffi {
         type HandleGeomBezierCurve;
         type HandleGeomTrimmedCurve;
         type HandleGeomSurface;
-        type HandleGeomBezierSurface;
         type HandleGeomPlane;
+        type HandleGeom_CylindricalSurface;
+        type HandleGeom_SphericalSurface;
+        type HandleGeom_ConicalSurface;
+        type HandleGeom_ToroidalSurface;
+        type HandleGeomBezierSurface;
+        type HandleGeom_BSplineSurface;
+        type HandleGeom_SurfaceOfLinearExtrusion;
+        type HandleGeom_SurfaceOfRevolution;
         type HandleGeom2d_Curve;
         type HandleGeom2d_Ellipse;
         type HandleGeom2d_TrimmedCurve;
-        type HandleGeom_CylindricalSurface;
         type HandleTopTools_HSequenceOfShape;
         type HandleLawFunction;
 
@@ -117,16 +123,64 @@ pub mod ffi {
             geom_surface_handle: &HandleGeomSurface,
         ) -> UniquePtr<HandleGeomPlane>;
 
+        pub fn new_HandleGeom_CylindricalSurface_from_HandleGeomSurface(
+            geom_surface_handle: &HandleGeomSurface,
+        ) -> UniquePtr<HandleGeom_CylindricalSurface>;
+
+        pub fn new_HandleGeom_SphericalSurface_from_HandleGeomSurface(
+            geom_surface_handle: & HandleGeomSurface,
+        ) -> UniquePtr<HandleGeom_SphericalSurface>;
+
+        pub fn new_HandleGeom_ConicalSurface_from_HandleGeomSurface(
+            geom_surface_handle: & HandleGeomSurface,
+        ) -> UniquePtr<HandleGeom_ConicalSurface>;
+
+        pub fn new_HandleGeom_ToroidalSurface_from_HandleGeomSurface(
+            geom_surface_handle: & HandleGeomSurface,
+        ) -> UniquePtr<HandleGeom_ToroidalSurface>;
+
+        pub fn new_HandleGeom_BezierSurface_from_HandleGeomSurface(
+            geom_surface_handle: & HandleGeomSurface,
+        ) -> UniquePtr<HandleGeomBezierSurface>;
+
+        pub fn new_HandleGeom_BSplineSurface_from_HandleGeomSurface(
+            geom_surface_handle: & HandleGeomSurface,
+        ) -> UniquePtr<HandleGeom_BSplineSurface>;
+
+        pub fn new_HandleGeom_SurfaceOfLinearExtrusion_from_HandleGeomSurface(
+            geom_surface_handle: & HandleGeomSurface,
+        ) -> UniquePtr<HandleGeom_SurfaceOfLinearExtrusion>;
+
+        pub fn new_HandleGeom_SurfaceOfRevolution_from_HandleGeomSurface(
+            geom_surface_handle: & HandleGeomSurface,
+        ) -> UniquePtr<HandleGeom_SurfaceOfRevolution>;
+
+        pub fn new_HandleGeomSurface_from_HandleGeomPlane(plane: &HandleGeomPlane) -> UniquePtr<HandleGeomSurface>;
+        pub fn new_HandleGeomSurface_from_HandleGeom_CylindricalSurface(cylinder: &HandleGeom_CylindricalSurface) -> UniquePtr<HandleGeomSurface>;
+        pub fn new_HandleGeomSurface_from_HandleGeom_SphericalSurface(sphere: &HandleGeom_SphericalSurface) -> UniquePtr<HandleGeomSurface>;
+        pub fn new_HandleGeomSurface_from_HandleGeom_ConicalSurface(cone: &HandleGeom_ConicalSurface) -> UniquePtr<HandleGeomSurface>;
+        pub fn new_HandleGeomSurface_from_HandleGeom_ToroidalSurface(torus: &HandleGeom_ToroidalSurface) -> UniquePtr<HandleGeomSurface>;
+        pub fn new_HandleGeomSurface_from_HandleGeom_BezierSurface(surface: &HandleGeomBezierSurface) -> UniquePtr<HandleGeomSurface>;
+        pub fn new_HandleGeomSurface_from_HandleGeom_BSplineSurface(surface: &HandleGeom_BSplineSurface) -> UniquePtr<HandleGeomSurface>;
+        pub fn new_HandleGeomSurface_from_HandleGeom_SurfaceOfLinearExtrusion(surface: &HandleGeom_SurfaceOfLinearExtrusion) -> UniquePtr<HandleGeomSurface>;
+        pub fn new_HandleGeomSurface_from_HandleGeom_SurfaceOfRevolution(surface: &HandleGeom_SurfaceOfRevolution) -> UniquePtr<HandleGeomSurface>;
+
         pub fn IsNull(self: &HandleStandardType) -> bool;
         pub fn IsNull(self: &HandleGeomCurve) -> bool;
         pub fn IsNull(self: &HandleGeomTrimmedCurve) -> bool;
         pub fn IsNull(self: &HandleGeomSurface) -> bool;
-        pub fn IsNull(self: &HandleGeomBezierSurface) -> bool;
         pub fn IsNull(self: &HandleGeomPlane) -> bool;
+        pub fn IsNull(self: &HandleGeom_CylindricalSurface) -> bool;
+        pub fn IsNull(self: &HandleGeom_SphericalSurface) -> bool;
+        pub fn IsNull(self: &HandleGeom_ConicalSurface) -> bool;
+        pub fn IsNull(self: &HandleGeom_ToroidalSurface) -> bool;
+        pub fn IsNull(self: &HandleGeomBezierSurface) -> bool;
+        pub fn IsNull(self: &HandleGeom_BSplineSurface) -> bool;
+        pub fn IsNull(self: &HandleGeom_SurfaceOfLinearExtrusion) -> bool;
+        pub fn IsNull(self: &HandleGeom_SurfaceOfRevolution) -> bool;
         pub fn IsNull(self: &HandleGeom2d_Curve) -> bool;
         pub fn IsNull(self: &HandleGeom2d_Ellipse) -> bool;
         pub fn IsNull(self: &HandleGeom2d_TrimmedCurve) -> bool;
-        pub fn IsNull(self: &HandleGeom_CylindricalSurface) -> bool;
         pub fn IsNull(self: &HandleTopTools_HSequenceOfShape) -> bool;
 
         pub fn HandleGeomCurve_Value(curve: &HandleGeomCurve, u: f64) -> UniquePtr<gp_Pnt>;
